@@ -16,6 +16,7 @@ const modal = document.getElementById('modal');
 const apriModalButton = document.getElementById('apriModalButton');
 const chiudiModalButton = document.getElementById('chiudiModalButton');
 const aggiungiTransazioneButton = document.getElementById('aggiungiTransazioneButton'); // Get the button by its ID
+const descrizioneSelect = document.getElementById('descrizione'); // Ottieni l'elemento select per la descrizione
 
 apriModalButton.onclick = function() {
     modal.style.display = 'block';
@@ -27,7 +28,8 @@ chiudiModalButton.onclick = function() {
 
 aggiungiTransazioneButton.onclick = function() { // Attach the event listener here
     const data = document.getElementById('data').value;
-    const descrizione = document.getElementById('descrizione').value;
+    // Ora la descrizione sarà il valore selezionato nella dropdown
+    const descrizione = descrizioneSelect.value;
     const tipo = document.getElementById('tipo').value;
     const CDC = document.getElementById('CDC').value;
     const importo = parseFloat(document.getElementById('importo').value);
