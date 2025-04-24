@@ -1,0 +1,218 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body, input {
+    font-family: "Poppins", sans-serif;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #212428;
+    margin: 0;
+}
+header {
+    padding: 30px; 
+    margin-bottom: 220px; 
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+    padding: 15px;
+}
+.login {
+    position: relative;
+    width: 380px;
+    background-color: #1c1c1c;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.login form {
+    position: relative;
+    inset: 4px;
+    background-color: #1e2024;
+    padding: 50px 40px;
+    border-radius: 8px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+h2 {
+    color: #fff;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+}
+.input {
+    position: relative;
+    width: 100%;
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+}
+input[type=email],
+input[type=password] {
+    position: relative;
+    width: 100%;
+    padding: 20px 10px 10px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    box-shadow: none;
+    color: #23242a;
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    transition: 0.5s;
+    z-index: 10;
+}
+label {
+    position: absolute;
+    left: 0;
+    padding: 20px 0 10px;
+    pointer-events: none;
+    color: #8f8f8f;
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    transition: 0,5s;
+}
+.input input:focus ~ label {
+    color: #fff;
+    font-size: 0.75em;
+    transform: translateY(-34px);
+}
+span {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: 0.5s;
+    pointer-events: none;
+}
+.input input:focus ~ span {
+    height: 44px;
+}
+.link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+}
+.link a {
+    margin: 10px 0;
+    font-size: 0.7em;
+    color: #8f8f8f;
+    text-decoration: none;
+    transition: 0.3s;
+}
+.link a:hover,
+.link a:nth-child(2) {
+    color: #fff;
+}
+input[type=submit] {
+    border: none;
+    outline: none;
+    padding: 15px 20px;
+    background-color: #39f;
+    cursor: pointer;
+    font-size: 0.9em;
+    border-radius: 4px;
+    font-weight: 600;
+    width: 100px;
+    margin-top: 10px;
+    color: #fff;
+    flex-grow: 1;
+    margin: 10px 10px;
+    text-align: center;
+}
+.login::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 380px;
+    height: 420px;
+    background-image: linear-gradient(0deg, transparent, transparent, #45de27, #45de27, #45de27);
+    z-index: 1;
+    animation: animate 6s linear infinite;
+    transform-origin: bottom right;
+}
+.login::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 380px;
+    height: 420px;
+    background-image: linear-gradient(0deg, transparent, transparent, #39f, #39f, #39f);
+    z-index: 1;
+    animation: animate 6s linear infinite;
+    transform-origin: bottom right;
+    animation-delay: -3s;
+}
+@keyframes animate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between; /* Per distanziarli se vuoi */
+    align-items: center; /* Per allinearli verticalmente se necessario */
+    margin-top: 50px; /* Aggiungi spazio sopra i bottoni */
+    width: 100%;
+}
+
+.button-container input[type="submit"] {
+    /* Stili per i bottoni (puoi riprendere quelli che avevi per .link) */
+    border: none;
+    outline: none;
+    padding: 15px 20px;
+    background-color: #39f;
+    cursor: pointer;
+    font-size: 0.9em;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #fff;
+    flex-grow: 1; /* Per farli occupare lo spazio disponibile */
+    margin: 0 5px; /* Aggiungi spazio tra i bottoni */
+    text-align: center;
+}
+
+.button-container input[type="submit"]:first-child {
+    margin-left: 0;
+}
+
+.button-container input[type="submit"]:last-child {
+    margin-right: 0;
+}
+/* ... altri stili ... */
+
+.forgot-password {
+    display: block; /* Per farlo apparire su una nuova riga */
+    margin-top: 20px;
+    font-size: 0.8em;
+    color: #8f8f8f; /* Esempio di colore grigio */
+    text-decoration: none; /* Rimuove la sottolineatura predefinita */
+    text-align: center; /* Allinea a destra (opzionale) */
+    width: 100%;
+}
+
+.forgot-password:hover {
+    color: #fff; /* Cambia colore al passaggio del mouse (opzionale) */
+    text-decoration: underline; /* Aggiunge la sottolineatura al passaggio del mouse (opzionale) */
+}

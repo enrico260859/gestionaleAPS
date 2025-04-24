@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elenco Soci</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style_01.css">
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore-compat.js"></script>
+</head>
+    <body>
+    <div class="sidebar">
+        <h1>Menù</h1>
+        <a href="index.html">Home</a>
+        <a href="volontari.html">Elenco Volontari</a>
+        <a href="soci.html">Elenco Soci</a>
+        <a href="bilancio_v01.html">Bilancio</a>
+        <a href="categorie-bilancio.html">Categorie Bilancio</a>
+        <a href="patrimonio_v01.html">Patrimonio</a>
+        <div class="sidebar-bottom-info">
+          <h5>© 2025 - Gestionale</h5>
+          </div>
+    </div>
+    <div class="content">
+        <header>
+            <input type="file" id="fileInput" accept="image/*" onchange="previewImage()">
+            <img id="headerImage" src="https://via.placeholder.com/40" alt="Logo" onclick="document.getElementById('fileInput').click();">
+            <h1>Elenco Soci</h1>
+        </header>
+        <div id="modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Inserisci Dati</h2>
+                <input type="date" class="modal-content input" id="data" placeholder="Data">
+                <input type="text" class="modal-content input" id="tessera" placeholder="Tessera">
+                <input type="text" class="modal-content input" id="cognome" placeholder="Cognome">
+                <input type="text" class="modal-content input" id="nome" placeholder="Nome">
+                <input type="text" class="modal-content input" id="indirizzo" placeholder="Indirizzo">
+                <input type="text" class="modal-content input" id="codicepostale" placeholder="Codice Postale">
+                <input type="text" class="modal-content input" id="comune" placeholder="Comune">
+                <input type="text" class="modal-content input" id="città" placeholder="Città">
+                <div>
+                <div class="modal-buttons button">
+                <button id="chiudiModalButton" class="modal-buttons button:first-child">Annulla</button>
+                <button id="aggiungiSocioButton">Aggiungi Socio</button>
+                </div>
+            </div>
+        </div>
+        </div>
+            <button id="apriModalButton" onclick="aggiungiSoci()">Aggiungi Socio</button>
+            <button onclick="esportaInExcel()">Esporta in Excel</button>
+
+          <table id="elencoSoci">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tessera</th>
+                <th>Cognome</th>
+                <th>Nome</th>
+                <th>Indirizzo</th>
+                <th>Codice Postale</th>
+                <th>Comune</th>
+                <th>Città</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <style>
+            table {
+              margin-bottom: 20px;
+            }
+            button {
+              margin-top: 20px;
+            }
+          </style>
+        </div>
+        <script src="elenco-soci.js"></script>
+        </body>
+</html>

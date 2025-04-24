@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style_01.css">
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>Menù</h1>
+        <a href="index.html" onclick="saveDataAndNavigate('index.html'); return false;">Home</a>
+        <a href="volontari.html" onclick="saveDataAndNavigate('volontari.html'); return false;">Elenco Volontari</a>
+        <a href="soci.html" onclick="saveDataAndNavigate('soci.html'); return false;">Elenco Soci</a>
+        <a href="bilancio_v01.html" onclick="saveDataAndNavigate('bilancio_v01.html'); return false;">Bilancio</a>
+        <a href="categorie-bilancio.html" onclick="saveDataAndNavigate('categorie-bilancio.html');">Categorie Bilancio</a>
+        <a href="patrimonio_v01.html" onclick="saveDataAndNavigate('patrimonio_v01.html'); return false;">Patrimonio</a>
+        <div class="sidebar-bottom-info">
+        <h5>© 2025 - Gestionale</h5>
+        </div>
+    </div>
+    <div class="container">
+        <div class="inner-container">
+        <div class="logo-titolo-container">
+            <img id="logoPreview" class="logo-preview" src="" alt="Logo" onclick="document.getElementById('logoUpload').click();"> 
+            <input type="file" id="logoUpload" style="display: none;" accept="image/*" onchange="previewLogo(event);">
+        <div></div>
+            <input type="text" id="title" class="title" placeholder="Titolo"> 
+        <div></div>
+            <p id="companyName" class="text-gray-700">Nome della società</p>
+            <p id="address" class="text-gray-700">Indirizzo</p>
+            <p id="city" class="text-gray-700">Città</p>
+            <p id="cf" class="text-gray-700">Codice Fiscale</p> 
+            <p id="vat" class="text-gray-700">P.IVA</p>
+            <p id="email" class="text-blue-600">Email</p> 
+            <p id="social" class="text-blue-500">Link Social</p>
+            <button id="apriModalButton" class="data-button">Inserisci Dati</button>
+         <div id="modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Inserisci Dati</h2>
+                <input type="text" class="modal-content input" id="modalCompanyName" placeholder="Nome della società">
+                <input type="text" class="modal-content input" id="modalAddress" placeholder="Indirizzo">
+                <input type="text" class="modal-content input" id="modalCity" placeholder="Città">
+                <input type="text" class="modal-content input" id="modalCf" placeholder="Codice Fiscale">
+                <input type="text" class="modal-content input" id="modalVat" placeholder="Partita IVA">
+                <input type="email" class="modal-content input" id="modalEmail" placeholder="Email">
+                <input type="text" class="modal-content input" id="modalSocial" placeholder="Link Social" class="modal-social-input">
+            <div>
+                <div class="modal-buttons button">
+                            <button id="chiudiModalButton" class="modal-buttons button:first-child">Annulla</button>
+                            <button id="saveDataButton" class="modal-buttons button:last-child">Salva</button>         
+    </div>
+    <script src="home.js"> 
+    </script>
+</body>
+</html>

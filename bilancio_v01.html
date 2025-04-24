@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilancio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style_01.css">
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>Menù</h1>
+        <a href="index.html">Home</a>
+        <a href="volontari.html">Elenco Volontari</a>
+        <a href="soci.html">Elenco Soci</a>
+        <a href="bilancio_v01.html">Bilancio</a>
+        <a href="categorie-bilancio.html">Categorie Bilancio</a>
+        <a href="patrimonio_v01.html">Patrimonio</a>
+        <div class="sidebar-bottom-info">
+            <h5>© 2025 - Gestionale</h5>
+            </div>
+    </div>
+    <div class="content">
+        <header>
+            <input type="file" id="fileInput" accept="image/*" onchange="previewImage()">
+            <img id="headerImage" src="https://via.placeholder.com/40" alt="Logo" onclick="document.getElementById('fileInput').click();">
+            <h1>Bilancio di Cassa</h1>
+        </header>
+            <div id="modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Inserisci Dati</h2>
+                <input type="date" class="modal-content input" id="data" placeholder="Data">
+                <input type="text" class="modal-content input" id="descrizione" placeholder="Descrizione">
+                <select id="tipo">
+                    <option value="entrata">Entrata</option>
+                    <option value="uscita">Uscita</option>
+                </select>
+                <select id="CDC">
+                    <option value="cassa">Cassa</option>
+                    <option value="banca">Banca</option>
+                </select>
+                <input type="number" class="modal-content" id="importo" step="0.01" placeholder="Importo">
+            <div>
+            <div class="modal-buttons button">
+                <button id="chiudiModalButton" class="modal-buttons button:first-child">Annulla</button>
+                <button id="aggiungiTransazioneButton">Aggiungi Transazione</button><br>
+            </div>
+            </div>
+            </div>
+        </div>
+        <button id="apriModalButton" class="data-button">Inserisci Dati</button>
+        <button onclick="esportaInExcel()">Esporta in Excel</button>
+
+
+    <table id="elencoTransazioni">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Descrizione</th>
+                <th>Tipo</th>
+                <th>CDC</th>
+                <th>Importo</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <style>
+        table {
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin-top: 20px; 
+        }
+    </style>
+    <div class="totals">
+        <span>Entrate Totali: <span id="totaleEntrate">0</span> €</span>
+        <span>Uscite Totali: <span id="totaleUscite">0</span> €</span>
+        <span>Saldo: <span id="saldo">0</span> €</span>
+    </div>
+<script src="bilancio_v01.js"></script>
+
+</body>
+</html>

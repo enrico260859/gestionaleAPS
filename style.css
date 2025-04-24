@@ -1,0 +1,238 @@
+  body {
+    display: flex;
+    margin: 0;
+    font-family: Calibri, sans-serif;
+  }
+  header {
+    background-color: #ddd;
+    color: black;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  header img {
+    height: 90px;
+    vertical-align: middle;
+  }
+  header h1 {
+    display: inline;
+    margin-left: 20px;
+  }
+  .content {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    margin-left: 250px;
+    max-width: 100%; /* Imposta un limite alla larghezza del contenuto principale */
+    margin-top: 20px;  /* Distanza fissa dal bordo superiore della pagina */
+  }
+  .content1 {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    margin-left: 250px;
+    max-width: 100%; /* Imposta un limite alla larghezza del contenuto principale */
+    margin-top: 20px;  /* Distanza fissa dal bordo superiore della pagina */
+    background-color: #dfdbdb;
+  }
+  #logo1 {
+    width: 100px;
+    height: 100px;
+    padding-block: 20px;
+    
+  }
+  #title1 {
+    width: 200px;
+    height: 20px;
+    text-align: center;
+    padding-block: 10px;
+    font-size: 30px;
+    font-weight: bold;
+    
+  }
+  #maschera {
+    
+    margin-left: 240px;
+    margin: auto;
+    width: 800px;
+    height: 800px;
+    background-color: white;
+    border-radius: 20px; /* Angoli arrotondati */
+    box-shadow: 0 4px 8px rgba(41, 39, 39, 0.2); /* Ombra leggera per profondità */
+    padding: 20px;
+    z-index: 1000; /* Assicura che il modal sia sopra altri elementi */
+    overflow: auto; /* Aggiunto overflow per contenuti che superano le dimensioni */
+  }
+  .modal {
+    display: none;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 800px;
+    height: 800px;
+    background-color: rgba(0, 0, 0, 0.4); /* Sfondo semi-trasparente */
+    overflow: auto;
+    padding-top: 100px; /* Aumenta il padding per centrare il modale verticalmente */
+}
+
+.modal-content {
+    background-color: #999494;
+    margin: auto; /* Centra il modale sia orizzontalmente che verticalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Imposta la larghezza del modale al 60% della finestra */
+    max-width: 500px; /* Imposta una larghezza massima per il modale */
+}
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+ 
+  .form-section {
+    margin-bottom: 20px;
+  }
+  label {
+    margin-right: 10px;
+  }
+  input, select {
+    padding: 8px;
+    margin: 5px;
+  }
+  button {
+    background-color:#ddd;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 5px;
+  }
+  button:hover {
+    background-color: #ccc;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+  th, td {
+    padding: 10px;
+    text-align: center;
+  }
+  .totals {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+  }
+  .totals span {
+    font-weight: bold;
+    margin-right: 20px;
+  }
+  input[type="file"] {
+    display: none;
+  }
+.sidebar {
+    width: 200px;
+    background: rgb(51, 51, 51);
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex; /* Abilita Flexbox per il layout interno */
+    flex-direction: column; /* Dispone gli elementi in colonna */
+    
+}
+.sidebar h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin: 5px 0;
+    background: #555;
+    border-radius: 5px;
+}
+.sidebar-bottom-info {
+  margin-top: auto;
+  text-align: center;
+  padding: 15px;
+}
+.sidebar-bottom-info input[type=disconect]{
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin: 10px;
+    background: #555;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-weight: 600;
+    width: 100px;
+}
+.sidebar a:hover {
+    background: #777;
+}
+
+.content {
+    margin-left: 250px;
+    padding: 20px;
+}
+.form-section1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra gli elementi orizzontalmente */
+  width: 600px; /* Imposta una larghezza massima per la form */
+  margin: 20px auto; /* Centra la form nella pagina */
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%; /* Assicura che i gruppi di input occupino tutta la larghezza disponibile */
+}
+
+.form-group label {
+  width: 300px;
+  text-align: right;
+  margin-right: 10px;
+  font-size: 1.1em;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="number"] {
+  width: 400px;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+.form-section button {
+  width: auto; /* Imposta la larghezza dei pulsanti in base al contenuto */
+  margin: 10px; /* Aggiunge un po' di spazio intorno ai pulsanti */
+  padding: 10px 20px; /* Aggiunge spazio interno ai pulsanti */
+}
