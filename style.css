@@ -71,7 +71,7 @@
     left: 0;
     top: 0;
     width: 800px;
-    height: 800px;
+    height: 1000px;
     background-color: rgba(0, 0, 0, 0.4); /* Sfondo semi-trasparente */
     overflow: auto;
     padding-top: 100px; /* Aumenta il padding per centrare il modale verticalmente */
@@ -82,7 +82,7 @@
     margin: auto; /* Centra il modale sia orizzontalmente che verticalmente */
     padding: 20px;
     border: 1px solid #888;
-    width: 50%; /* Imposta la larghezza del modale al 60% della finestra */
+    width: 80%; /* Imposta la larghezza del modale al 60% della finestra */
     max-width: 500px; /* Imposta una larghezza massima per il modale */
 }
   .close {
