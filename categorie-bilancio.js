@@ -1,44 +1,38 @@
 let db;
-
 const request = indexedDB.open("CategorieBilancioDB", 1);
-
 request.onupgradeneeded = function (event) {
   db = event.target.result;
   if (!db.objectStoreNames.contains("categorie")) {
     db.createObjectStore("categorie", { keyPath: "id", autoIncrement: true });
   }
 };
-
 request.onsuccess = function (event) {
   db = event.target.result;
   caricaCategorie();
+  aggiornaSelectDescrizione();
 };
-
 request.onerror = function (event) {
   console.error("Errore IndexedDB:", event.target.errorCode);
 };
-
 function aggiungiCategoria() {
   const nome = prompt("Inserisci il nome della nuova voce:");
   if (!nome) return;
-
   const tipo = prompt("Tipo voce? (gruppo / sottogruppo / sub-sottogruppo):");
   if (!["gruppo", "sottogruppo", "sub-sottogruppo"].includes(tipo)) return alert("Tipo non valido");
-
   const padre = prompt("ID voce padre (lascia vuoto se è un gruppo principale):");
-
   const nuovaVoce = {
     nome: nome.trim(),
     tipo: tipo.trim(),
     padre: padre.trim() || null
   };
-
   const tx = db.transaction("categorie", "readwrite");
   const store = tx.objectStore("categorie");
   store.add(nuovaVoce);
-  tx.oncomplete = () => caricaCategorie();
+  tx.oncomplete = () => {
+    caricaCategorie();
+    aggiornaSelectDescrizione();
+  };
 }
-
 function caricaCategorie() {
   const tx = db.transaction("categorie", "readonly");
   const store = tx.objectStore("categorie");
@@ -47,10 +41,8 @@ function caricaCategorie() {
   richiesta.onsuccess = function () {
     const categorie = richiesta.result;
     costruisciAlbero(categorie);
-    aggiornaSelectDescrizione(categorie); // Aggiorna anche la select
   };
 }
-
 function costruisciAlbero(categorie) {
   const tree = document.getElementById("categorie-tree");
   tree.innerHTML = "";
@@ -64,11 +56,7 @@ function costruisciAlbero(categorie) {
     }
   });
 
-  // Ordina figli alfabeticamente
-  Object.values(mappa).forEach(v => v.figli.sort((a, b) => a.nome.localeCompare(b.nome)));
-
-  // Ordina radici alfabeticamente
-  const radici = categorie.filter(v => !v.padre).sort((a, b) => a.nome.localeCompare(b.nome));
+  const radici = categorie.filter(v => !v.padre);
   radici.forEach(r => tree.appendChild(creaNodo(r)));
 }
 
@@ -107,7 +95,10 @@ function modificaCategoria(id) {
     voce.nome = nuovoNome.trim();
     store.put(voce);
 
-    tx.oncomplete = () => caricaCategorie();
+    tx.oncomplete = () => {
+      caricaCategorie();
+      aggiornaSelectDescrizione();
+    };
   };
 }
 
@@ -118,10 +109,13 @@ function eliminaCategoria(id) {
   store.getAll().onsuccess = function (event) {
     const tutte = event.target.result;
     const daEliminare = raccogliFigli(tutte, id);
-    daEliminare.push(id); // anche la voce stessa
+    daEliminare.push(id);
 
     daEliminare.forEach(voceId => store.delete(voceId));
-    tx.oncomplete = () => caricaCategorie();
+    tx.oncomplete = () => {
+      caricaCategorie();
+      aggiornaSelectDescrizione();
+    };
   };
 }
 
@@ -134,37 +128,43 @@ function raccogliFigli(categorie, idPadre) {
   return tuttiFigli;
 }
 
-// ✅ Aggiorna la select con le categorie ordinate
-function aggiornaSelectDescrizione(categorie) {
-  const select = document.getElementById("descrizione");
+function aggiornaSelectDescrizione() {
+  const select = document.getElementById('descrizione');
   if (!select) return;
 
-  select.innerHTML = "";
+  select.innerHTML = '';
 
-  const mappa = {};
-  categorie.forEach(v => v.figli = []);
-  categorie.forEach(v => mappa[v.id] = v);
-  categorie.forEach(v => {
-    if (v.padre && mappa[v.padre]) {
-      mappa[v.padre].figli.push(v);
-    }
-  });
+  const tx = db.transaction("categorie", "readonly");
+  const store = tx.objectStore("categorie");
+  const richiesta = store.getAll();
 
-  // Ordina figli
-  Object.values(mappa).forEach(v => v.figli.sort((a, b) => a.nome.localeCompare(b.nome)));
-  const radici = categorie.filter(v => !v.padre).sort((a, b) => a.nome.localeCompare(b.nome));
-  radici.forEach(voce => aggiungiOpzione(select, voce));
+  richiesta.onsuccess = function () {
+    const categorie = richiesta.result;
+
+    const mappa = {};
+    categorie.forEach(v => v.figli = []);
+    categorie.forEach(v => mappa[v.id] = v);
+    categorie.forEach(v => {
+      if (v.padre && mappa[v.padre]) {
+        mappa[v.padre].figli.push(v);
+      }
+    });
+
+    const radici = categorie.filter(v => !v.padre);
+    radici.forEach(r => aggiungiOpzione(select, r, 0));
+  };
 }
 
-function aggiungiOpzione(select, voce, livello = 0) {
-  const option = document.createElement("option");
+function aggiungiOpzione(select, voce, livello) {
+  const option = document.createElement('option');
   option.value = voce.nome;
-  option.textContent = "—".repeat(livello) + " " + voce.nome;
+  option.textContent = `${'—'.repeat(livello)} ${voce.nome} (${voce.tipo})`;
   select.appendChild(option);
 
-  voce.figli.forEach(figlio => aggiungiOpzione(select, figlio, livello + 1));
+  if (voce.figli && voce.figli.length > 0) {
+    voce.figli.forEach(figlio => aggiungiOpzione(select, figlio, livello + 1));
+  }
 }
-
 
 
         // Funzione di esempio per la preview dell'immagine (potrebbe necessitare implementazione CSS)
