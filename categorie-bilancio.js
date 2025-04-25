@@ -17,20 +17,47 @@ request.onerror = function (event) {
 function aggiungiCategoria() {
   const nome = prompt("Inserisci il nome della nuova voce:");
   if (!nome) return;
+
   const tipo = prompt("Tipo voce? (gruppo / sottogruppo / sub-sottogruppo):");
-  if (!["gruppo", "sottogruppo", "sub-sottogruppo"].includes(tipo)) return alert("Tipo non valido");
-  const padre = prompt("ID voce padre (lascia vuoto se è un gruppo principale):");
-  const nuovaVoce = {
-    nome: nome.trim(),
-    tipo: tipo.trim(),
-    padre: padre.trim() || null
-  };
-  const tx = db.transaction("categorie", "readwrite");
+  if (!["gruppo", "sottogruppo", "sub-sottogruppo"].includes(tipo)) {
+    alert("Tipo non valido");
+    return;
+  }
+
+  // Mostra le categorie esistenti con gli ID
+  let categorieString = "Categorie esistenti:\n";
+  const tx = db.transaction("categorie", "readonly");
   const store = tx.objectStore("categorie");
-  store.add(nuovaVoce);
-  tx.oncomplete = () => {
-    caricaCategorie();
-    aggiornaSelectDescrizione();
+  const request = store.openCursor();
+
+  request.onsuccess = function(event) {
+    const cursor = event.target.result;
+    if (cursor) {
+      categorieString += `ID: ${cursor.key}, Nome: ${cursor.value.nome}\n`;
+      cursor.continue();
+    } else {
+      // Mostra le categorie e poi richiedi l'ID del padre
+      const padre = prompt(categorieString + "\nInserisci l'ID voce padre (lascia vuoto se è un gruppo principale):");
+
+      const nuovaVoce = {
+        nome: nome.trim(),
+        tipo: tipo.trim(),
+        padre: padre.trim() || null
+      };
+
+      const tx = db.transaction("categorie", "readwrite");
+      const store = tx.objectStore("categorie");
+      store.add(nuovaVoce);
+
+      tx.oncomplete = () => {
+        caricaCategorie();
+        aggiornaSelectDescrizione();
+      };
+    }
+  };
+
+  request.onerror = function(event) {
+    console.error("Errore IndexedDB:", event.target.error);
   };
 }
 function caricaCategorie() {
