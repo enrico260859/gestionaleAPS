@@ -47,6 +47,7 @@ function caricaCategorie() {
   richiesta.onsuccess = function () {
     const categorie = richiesta.result;
     costruisciAlbero(categorie);
+    aggiornaSelectDescrizione(categorie); // Aggiorna anche la select
   };
 }
 
@@ -63,7 +64,11 @@ function costruisciAlbero(categorie) {
     }
   });
 
-  const radici = categorie.filter(v => !v.padre);
+  // Ordina figli alfabeticamente
+  Object.values(mappa).forEach(v => v.figli.sort((a, b) => a.nome.localeCompare(b.nome)));
+
+  // Ordina radici alfabeticamente
+  const radici = categorie.filter(v => !v.padre).sort((a, b) => a.nome.localeCompare(b.nome));
   radici.forEach(r => tree.appendChild(creaNodo(r)));
 }
 
@@ -128,6 +133,38 @@ function raccogliFigli(categorie, idPadre) {
   });
   return tuttiFigli;
 }
+
+// ✅ Aggiorna la select con le categorie ordinate
+function aggiornaSelectDescrizione(categorie) {
+  const select = document.getElementById("descrizione");
+  if (!select) return;
+
+  select.innerHTML = "";
+
+  const mappa = {};
+  categorie.forEach(v => v.figli = []);
+  categorie.forEach(v => mappa[v.id] = v);
+  categorie.forEach(v => {
+    if (v.padre && mappa[v.padre]) {
+      mappa[v.padre].figli.push(v);
+    }
+  });
+
+  // Ordina figli
+  Object.values(mappa).forEach(v => v.figli.sort((a, b) => a.nome.localeCompare(b.nome)));
+  const radici = categorie.filter(v => !v.padre).sort((a, b) => a.nome.localeCompare(b.nome));
+  radici.forEach(voce => aggiungiOpzione(select, voce));
+}
+
+function aggiungiOpzione(select, voce, livello = 0) {
+  const option = document.createElement("option");
+  option.value = voce.nome;
+  option.textContent = "—".repeat(livello) + " " + voce.nome;
+  select.appendChild(option);
+
+  voce.figli.forEach(figlio => aggiungiOpzione(select, figlio, livello + 1));
+}
+
 
 
         // Funzione di esempio per la preview dell'immagine (potrebbe necessitare implementazione CSS)
