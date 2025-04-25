@@ -1,124 +1,145 @@
 let db;
 
-    const request = indexedDB.open("CatalogoLibreriaDB", 1);
+const request = indexedDB.open("CategorieBilancioDB", 1);
 
-    request.onupgradeneeded = function(event) {
-      db = event.target.result;
-      if (!db.objectStoreNames.contains("voci")) {
-        db.createObjectStore("voci", { keyPath: "id", autoIncrement: true });
-      }
-    };
+request.onupgradeneeded = function (event) {
+  db = event.target.result;
+  if (!db.objectStoreNames.contains("categorie")) {
+    db.createObjectStore("categorie", { keyPath: "id", autoIncrement: true });
+  }
+};
 
-    request.onsuccess = function(event) {
-      db = event.target.result;
-      caricaVoci();
-    };
+request.onsuccess = function (event) {
+  db = event.target.result;
+  caricaCategorie();
+};
 
-    request.onerror = function(event) {
-      console.error("IndexedDB errore:", event.target.errorCode);
-    };
+request.onerror = function (event) {
+  console.error("Errore IndexedDB:", event.target.errorCode);
+};
 
-    function aggiungiVoce() {
-      const nome = document.getElementById("nome").value.trim();
-      const tipo = document.getElementById("tipo").value;
-      const padre = document.getElementById("padre").value || null;
+function aggiungiCategoria() {
+  const nome = prompt("Inserisci il nome della nuova voce:");
+  if (!nome) return;
 
-      if (!nome) return alert("Inserisci un nome.");
+  const tipo = prompt("Tipo voce? (gruppo / sottogruppo / sub-sottogruppo):");
+  if (!["gruppo", "sottogruppo", "sub-sottogruppo"].includes(tipo)) return alert("Tipo non valido");
 
-      const voce = { nome, tipo, padre };
+  const padre = prompt("ID voce padre (lascia vuoto se è un gruppo principale):");
 
-      const tx = db.transaction("voci", "readwrite");
-      const store = tx.objectStore("voci");
-      store.add(voce);
+  const nuovaVoce = {
+    nome: nome.trim(),
+    tipo: tipo.trim(),
+    padre: padre.trim() || null
+  };
 
-      tx.oncomplete = () => caricaVoci();
+  const tx = db.transaction("categorie", "readwrite");
+  const store = tx.objectStore("categorie");
+  store.add(nuovaVoce);
+  tx.oncomplete = () => caricaCategorie();
+}
+
+function caricaCategorie() {
+  const tx = db.transaction("categorie", "readonly");
+  const store = tx.objectStore("categorie");
+  const richiesta = store.getAll();
+
+  richiesta.onsuccess = function () {
+    const categorie = richiesta.result;
+    costruisciAlbero(categorie);
+  };
+}
+
+function costruisciAlbero(categorie) {
+  const tree = document.getElementById("categorie-tree");
+  tree.innerHTML = "";
+
+  const mappa = {};
+  categorie.forEach(v => v.figli = []);
+  categorie.forEach(v => mappa[v.id] = v);
+  categorie.forEach(v => {
+    if (v.padre && mappa[v.padre]) {
+      mappa[v.padre].figli.push(v);
     }
+  });
 
-    function caricaVoci() {
-      const tx = db.transaction("voci", "readonly");
-      const store = tx.objectStore("voci");
-      const richiesta = store.getAll();
+  const radici = categorie.filter(v => !v.padre);
+  radici.forEach(r => tree.appendChild(creaNodo(r)));
+}
 
-      richiesta.onsuccess = function() {
-        const voci = richiesta.result;
-        aggiornaAlbero(voci);
-        aggiornaSelectPadre(voci);
-      };
-    }
+function creaNodo(voce) {
+  const div = document.createElement("div");
+  div.classList.add("categoria-nodo");
+  div.innerHTML = `
+    <strong>${voce.nome}</strong> (${voce.tipo})
+    <i class="fas fa-edit" title="Modifica" onclick="modificaCategoria(${voce.id})"></i>
+    <i class="fas fa-trash" title="Elimina" onclick="eliminaCategoria(${voce.id})"></i>
+  `;
 
-    function aggiornaSelectPadre(voci) {
-      const select = document.getElementById("padre");
-      select.innerHTML = '<option value="">(nessuno)</option>';
-      voci.forEach(voce => {
-        select.innerHTML += `<option value="${voce.id}">${voce.nome} (${voce.tipo})</option>`;
-      });
-    }
-
-    function aggiornaAlbero(voci) {
-      const mappa = {};
-      voci.forEach(v => v.figli = []);
-      voci.forEach(v => mappa[v.id] = v);
-      voci.forEach(v => {
-        if (v.padre && mappa[v.padre]) {
-          mappa[v.padre].figli.push(v);
-        }
-      });
-
-      const radici = voci.filter(v => !v.padre);
-      const ul = document.getElementById("albero");
-      ul.innerHTML = "";
-      radici.forEach(r => ul.appendChild(creaNodo(r)));
-    }
-
-    function creaNodo(voce) {
+  if (voce.figli.length) {
+    const ul = document.createElement("ul");
+    voce.figli.forEach(figlio => {
       const li = document.createElement("li");
-      li.innerHTML = `<span class="tree-node">${voce.nome}</span>
-        <span class="actions" onclick="modificaVoce(${voce.id})">✏️</span>
-        <span class="actions" onclick="eliminaVoce(${voce.id})">🗑️</span>`;
-      if (voce.figli.length) {
-        const ul = document.createElement("ul");
-        voce.figli.forEach(figlio => ul.appendChild(creaNodo(figlio)));
-        li.appendChild(ul);
-      }
-      return li;
-    }
+      li.appendChild(creaNodo(figlio));
+      ul.appendChild(li);
+    });
+    div.appendChild(ul);
+  }
 
-    function modificaVoce(id) {
-      const nuovoNome = prompt("Modifica nome:");
-      if (!nuovoNome) return;
+  return div;
+}
 
-      const tx = db.transaction("voci", "readwrite");
-      const store = tx.objectStore("voci");
-      const getReq = store.get(id);
+function modificaCategoria(id) {
+  const tx = db.transaction("categorie", "readwrite");
+  const store = tx.objectStore("categorie");
+  const richiesta = store.get(id);
 
-      getReq.onsuccess = function() {
-        const voce = getReq.result;
-        voce.nome = nuovoNome;
-        store.put(voce);
-        tx.oncomplete = () => caricaVoci();
-      };
-    }
+  richiesta.onsuccess = function () {
+    const voce = richiesta.result;
+    const nuovoNome = prompt("Modifica nome voce:", voce.nome);
+    if (!nuovoNome) return;
 
-    function eliminaVoce(id) {
-      // Prima cancella anche eventuali figli
-      const tx = db.transaction("voci", "readwrite");
-      const store = tx.objectStore("voci");
+    voce.nome = nuovoNome.trim();
+    store.put(voce);
 
-      store.getAll().onsuccess = function(event) {
-        const tutte = event.target.result;
-        const daEliminare = raccogliFigli(tutte, id);
-        daEliminare.push(id); // includi anche il nodo principale
+    tx.oncomplete = () => caricaCategorie();
+  };
+}
 
-        daEliminare.forEach(voceId => store.delete(voceId));
-        tx.oncomplete = () => caricaVoci();
-      };
-    }
+function eliminaCategoria(id) {
+  const tx = db.transaction("categorie", "readwrite");
+  const store = tx.objectStore("categorie");
 
-    function raccogliFigli(voci, idPadre) {
-      let figliDiretti = voci.filter(v => v.padre == idPadre).map(v => v.id);
-      let tuttiFigli = [...figliDiretti];
-      figliDiretti.forEach(fid => {
-        tuttiFigli = tuttiFigli.concat(raccogliFigli(voci, fid));
-      });
-      return tuttiFigli;
-    }
+  store.getAll().onsuccess = function (event) {
+    const tutte = event.target.result;
+    const daEliminare = raccogliFigli(tutte, id);
+    daEliminare.push(id); // anche la voce stessa
+
+    daEliminare.forEach(voceId => store.delete(voceId));
+    tx.oncomplete = () => caricaCategorie();
+  };
+}
+
+function raccogliFigli(categorie, idPadre) {
+  let figliDiretti = categorie.filter(v => v.padre == idPadre).map(v => v.id);
+  let tuttiFigli = [...figliDiretti];
+  figliDiretti.forEach(fid => {
+    tuttiFigli = tuttiFigli.concat(raccogliFigli(categorie, fid));
+  });
+  return tuttiFigli;
+}
+
+
+        // Funzione di esempio per la preview dell'immagine (potrebbe necessitare implementazione CSS)
+        function previewImage() {
+            const fileInput = document.getElementById('fileInput');
+            const headerImage = document.getElementById('headerImage');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    headerImage.src = reader.result;
+                }
+                reader.read
+            }
+        } 
