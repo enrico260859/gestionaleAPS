@@ -192,18 +192,22 @@ function aggiungiOpzione(select, voce, livello) {
     voce.figli.forEach(figlio => aggiungiOpzione(select, figlio, livello + 1));
   }
 }
+function previewImage() {
+  const fileInput = document.getElementById('fileInput');
+  const headerImage = document.getElementById('headerImage');
 
-
-        // Funzione di esempio per la preview dell'immagine (potrebbe necessitare implementazione CSS)
-        function previewImage() {
-            const fileInput = document.getElementById('fileInput');
-            const headerImage = document.getElementById('headerImage');
-            const file = fileInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onloadend = function() {
-                    headerImage.src = reader.result;
-                }
-                reader.read
-            }
-        } 
+  const file = fileInput.files[0];
+  if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+          headerImage.src = e.target.result;
+          savePagina();
+      }
+      reader.readAsDataURL(file);
+  }
+}
+function savePagina() {
+  const transaction = db.transaction(['pagina'], 'readwrite');
+  const objectStore = transaction.objectStore('pagina');
+  objectStore.put({ id: 1, headerImage: document.getElementById('headerImage').src });
+}
