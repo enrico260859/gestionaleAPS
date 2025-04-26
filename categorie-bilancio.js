@@ -210,3 +210,6 @@ function savePagina() {
   const objectStore = transaction.objectStore('pagina');
   objectStore.put({ id: 1, headerImage: document.getElementById('headerImage').src });
 }
+window.onload = () => {
+  loadData();
+};
