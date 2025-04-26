@@ -195,7 +195,6 @@ function aggiungiOpzione(select, voce, livello) {
 function previewImage() {
   const fileInput = document.getElementById('fileInput');
   const headerImage = document.getElementById('headerImage');
-
   const file = fileInput.files[0];
   if (file) {
       const reader = new FileReader();
